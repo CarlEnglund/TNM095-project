@@ -14,6 +14,21 @@ class Vec {
     }
   }
 
+  /**
+   * generate a random position with x and y as maximum values
+   * @param x [Number]
+   * @param y [Number]
+   * @returns {Vec}
+   * @constructor
+   */
+  static Random({ x, y }) {
+    const coords = {
+      x: Math.round(Math.random() * x),
+      y: Math.round(Math.random() * y),
+    };
+    return new Vec(coords);
+  }
+
   get x() {
     return this.coords[0];
   }

@@ -1,4 +1,4 @@
-const World = require('./World.js');
+const Control = require('./Control.js');
 
-const world = new World();
-world.init();
+const control = new Control();
+control.start();

@@ -1,7 +1,7 @@
 class Resource {
-  constructor(world, position, lifetime, level) {
+  constructor(world, position, lifetime, level = 1) {
     this.position = position;
-    this.resourceLevel = level
+    this.resourceLevel = level;
     this.lifetime = lifetime;
     this.ctx = world.context;
   }
@@ -18,5 +18,5 @@ class Resource {
    return this.position;
   }
 }
-export default Resource;
 
+export default Resource;
