@@ -16,15 +16,14 @@ class Vec {
 
   /**
    * generate a random position with x and y as maximum values
-   * @param x [Number]
    * @param y [Number]
    * @returns {Vec}
    * @constructor
    */
-  static Random({ x, y }) {
+  static Random({ minX: minX, minY: minY, maxX: maxX, maxY: maxY } = {minX: 0, minY: 0, maxX: 1, maxY: 1}) {
     const coords = {
-      x: Math.round(Math.random() * x),
-      y: Math.round(Math.random() * y),
+      x: Math.random() * (maxX - minX) + minX,
+      y: Math.random() * (maxY - minY) + minY,
     };
     return new Vec(coords);
   }
@@ -43,6 +42,15 @@ class Vec {
 
   set y(y) {
     this.coords[1] = y;
+  }
+
+  /**
+   * add content of `vec` to `this`
+   * @param vec [Vec]
+   */
+  add(vec) {
+    this.x += vec.x;
+    this.y += vec.y;
   }
 }
 
