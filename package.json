@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "gulp"
+    "start": "gulp",
+    "lint": "./node_modules/.bin/eslint ./app -c ./.eslintrc || exit 0"
   },
   "devDependencies": {
     "autoprefixer": "latest",
@@ -8,6 +9,11 @@
     "babel-loader": "latest",
     "babel-preset-es2015": "latest",
     "css-loader": "latest",
+    "eslint": "^3.6.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-plugin-import": "^1.16.0",
+    "eslint-plugin-jsx-a11y": "^2.2.2",
+    "eslint-plugin-react": "^6.3.0",
     "gulp": "latest",
     "gulp-util": "latest",
     "node-sass": "latest",
