@@ -56,6 +56,15 @@ class Vec {
     this.x += vec.x;
     this.y += vec.y;
   }
+
+  /**
+   * calculate the euclidean distance from `this` to `vec`
+   * @param vec
+   * @returns {number}
+   */
+  dist(vec) {
+    return Math.sqrt(Math.pow(this.x + vec.x, 2) + Math.pow(this.y + vec.y, 2));
+  }
 }
 
 export default Vec;
