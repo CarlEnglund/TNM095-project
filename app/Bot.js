@@ -3,8 +3,9 @@ const Vec = require('./Vec.js');
 const COST = 0.001;
 
 class Bot {
-  constructor(position) {
+  constructor(position, basePosition) {
     this.position = position;
+    this.basePosition = basePosition;
     this.life = 1;
   }
 

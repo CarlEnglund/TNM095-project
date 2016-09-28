@@ -7,7 +7,7 @@ class World {
   /**
    * construct a world with boundaries
    * @param boundaries [Object] { w, h }
-   */
+  */ 
   constructor(boundaries) {
     this.boundaries = boundaries;
     this.bots = [];
@@ -18,9 +18,10 @@ class World {
   init() {
     console.info('Adding things to world...');
     const bounds = { maxX: this.boundaries.w, maxY: this.boundaries.h };
+    const basePosition = new Vec.Random(bounds);
     this.createRandomResources(bounds);
-    this.createBots(bounds, 5);
-    this.nests.push(new Nest(Vec.Random(bounds)));
+    this.nests.push(new Nest(basePosition));
+    this.createBots(bounds, 5, basePosition);
   }
 
   update() {
@@ -34,9 +35,9 @@ class World {
     }
   }
 
-  createBots(bounds, amount = 10) {
+  createBots(bounds, amount = 10, basePosition) {
     while (--amount) {
-      this.bots.push(new Bot(new Vec.Random(bounds)));
+      this.bots.push(new Bot((new Vec.Random(bounds)), basePosition));
     }
   }
 
