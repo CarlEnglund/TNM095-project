@@ -1,3 +1,5 @@
+/* global window, document */
+
 const World = require('./World.js');
 const Renderer = require('./Renderer.js');
 
@@ -23,7 +25,7 @@ class Control {
   render() {
     // IT'S ALIVE
     this.renderer.draw(this.world);
-    this.world.update()
+    this.world.update();
     window.requestAnimationFrame(this.render.bind(this));
   }
 }

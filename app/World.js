@@ -1,5 +1,5 @@
 const Resource = require('./Resource.js');
-const Nest = require('./Nest.js')
+const Nest = require('./Nest.js');
 const Vec = require('./Vec.js');
 const Bot = require('./Bot.js');
 

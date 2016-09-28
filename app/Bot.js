@@ -9,7 +9,7 @@ class Bot {
     this.life = 1;
   }
 
-  static Size() {
+  static size() {
     return new Vec([6, 6]);
   }
 
@@ -20,17 +20,19 @@ class Bot {
   }
 
   move() {
-    if (this.resources > 0)
+    if (this.resources <= 0) {
+      return;
+    }
     this.position.add(this.movement);
     this.resources -= COST;
   }
 
   get movement() {
-    return new Vec.Random({ minX: -1, minY: -1, maxX: 1, maxY: 1});
+    return new Vec.Random({ minX: -1, minY: -1, maxX: 1, maxY: 1 });
   }
 
   get size() {
-    return Bot.Size();
+    return Bot.size();
   }
 
   get style() {
@@ -39,7 +41,9 @@ class Bot {
 
   set resources(resources) {
     this.life = resources;
-    if (this.resources <= 0) console.error('DEAD!');
+    if (this.resources <= 0) {
+      console.error('DEAD!');
+    }
   }
 
   get resources() {

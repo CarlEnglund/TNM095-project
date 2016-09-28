@@ -1,5 +1,7 @@
 const Vec = require('./Vec.js');
 
+const FADE = 0.0001;
+
 class Resource {
   constructor(position, lifetime = 1, level = 1) {
     this.position = position;
@@ -10,9 +12,9 @@ class Resource {
   static size() {
     return new Vec([2, 2]);
   }
-  
-  update() {
 
+  update() {
+    this.resourceLevel -= FADE;
   }
 
   get style() {

@@ -20,14 +20,14 @@ class Vec {
    * @returns {Vec}
    * @constructor
    */
-  static Random({ minX, minY, maxX, maxY}) {
+  static Random({ minX, minY, maxX, maxY }) {
     minX = minX || 0;
     minY = minY || 0;
     maxX = maxX || 1;
     maxY = maxY || 1;
     const coords = {
-      x: Math.random() * (maxX - minX) + minX,
-      y: Math.random() * (maxY - minY) + minY,
+      x: (Math.random() * (maxX - minX)) + minX,
+      y: (Math.random() * (maxY - minY)) + minY,
     };
     return new Vec(coords);
   }
