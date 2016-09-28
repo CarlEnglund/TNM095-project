@@ -17,8 +17,10 @@ class World {
 
   init() {
     console.info('Adding things to world...');
-    this.createRandomResources();
-    this.bots.push(new Bot(new Vec()));
+    const bounds = { maxX: this.boundaries.w, maxY: this.boundaries.h };
+    this.createRandomResources(bounds);
+    this.createBots(bounds, 5);
+    this.nests.push(new Nest(Vec.Random(bounds)));
   }
 
   update() {
@@ -26,18 +28,15 @@ class World {
     this.bots.forEach(bot => bot.update());
   }
 
-  createRandomResources(amount = 100) {
-    const bounds = { x: this.boundaries.w, y: this.boundaries.h };
+  createRandomResources(bounds, amount = 100) {
     while (--amount) {
       this.resources.push(new Resource(Vec.Random(bounds)));
     }
-    this.nests.push(new Nest(Vec.Random(bounds)));
-}
+  }
 
-  createRandomResources(amount = 100) {
-    const bounds = {maxX: this.boundaries.w, maxY: this.boundaries.h, minX: 0, minY: 0};
+  createBots(bounds, amount = 10) {
     while (--amount) {
-      this.resources.push(new Resource(Vec.Random(bounds)));
+      this.bots.push(new Bot(new Vec.Random(bounds)));
     }
   }
 

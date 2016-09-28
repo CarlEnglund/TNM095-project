@@ -15,7 +15,7 @@ class Control {
   }
 
   start() {
-    console.info('Starting simulation...')
+    console.info('Starting simulation...');
     this.world.init();
     window.requestAnimationFrame(this.render.bind(this));
   }
