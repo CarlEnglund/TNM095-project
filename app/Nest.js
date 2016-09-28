@@ -11,7 +11,7 @@ class Nest {
     this.ctx.save();
     this.ctx.translate(this.position.x, this.position.y);
     this.ctx.fillStyle = "Red";
-    this.ctx.fillRect(this.positon.x, this.position.y, this.width, this.height);
+    this.ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     this.ctx.restore();
   }
 

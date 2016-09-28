@@ -1,4 +1,5 @@
 const World = require('./World.js');
+const Renderer = require('./Renderer.js');
 
 class Control {
   constructor(elementId = 'application', size = { w: 800, h: 600 }) {
@@ -9,6 +10,8 @@ class Control {
 
     const parent = document.getElementById(elementId);
     parent.appendChild(this.canvas);
+
+    this.renderer = new Renderer(this.canvas);
   }
 
   start() {
@@ -20,6 +23,7 @@ class Control {
   render() {
     // IT'S ALIVE
     this.world.update();
+    this.renderer.draw(this.world);
 
     window.requestAnimationFrame(this.render.bind(this));
   }

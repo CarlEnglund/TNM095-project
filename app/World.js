@@ -28,6 +28,10 @@ class World {
       this.resources.push(new Resource(Vec.Random(bounds)));
     }
   }
+
+  get drawables() {
+    return this.bots.concat(this.nests).concat(this.resources);
+  }
 }
 
 export default World;
