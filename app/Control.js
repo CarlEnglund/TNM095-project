@@ -22,9 +22,8 @@ class Control {
 
   render() {
     // IT'S ALIVE
-    this.world.update();
     this.renderer.draw(this.world);
-
+    this.world.update()
     window.requestAnimationFrame(this.render.bind(this));
   }
 }

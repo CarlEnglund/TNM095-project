@@ -1,32 +1,33 @@
+const Vec = require('./Vec.js')
 class Nest {
-  constructor(world, position, width, height, resources) {
-    this.postion = position;
+    constructor(position, width = 50, height = 50, resources = 1) {
+    this.position = position;
     this.width = width;
     this.height = height;
     this.resources = resources;
-    this.ctx = world.context;
   }
   
-  update() {
-    this.ctx.save();
-    this.ctx.translate(this.position.x, this.position.y);
-    this.ctx.fillStyle = "Red";
-    this.ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-    this.ctx.restore();
+  update() { 
+   if(this.width > 0 && this.height > 0) 
+     this.shrinkNest();
   }
 
-  getPostion() {
-    return this.position;
+  get style() {
+    return 'red';
   }
 
+  get size() {
+    return new Vec([this.width, this.height]);  
+  }
+  
   growNest() {
     this.width++;
     this.height++;
   }
   
   shrinkNest() {
-    this.width--;
-    this.height--;
+    this.width = this.width - 1/60;
+    this.height = this.height - 1/60;
   }
 
   addResourceToNest() {
