@@ -51,7 +51,7 @@ class World {
    * @param ignore {Array<Resources>}
    */
   availableResources(pos, ignore = []) {
-    return this.resources.filter(r => r.position.manhattan(pos) < Bot.SIGHT && !ignore.includes(r));
+    return this.resources.filter(r => r.position.manhattan(pos) < Bot.MANHATTAN_SIGHT && !ignore.includes(r));
   }
 }
 
