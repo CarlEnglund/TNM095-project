@@ -21,7 +21,7 @@ class World {
     const basePosition = new Vec.Random(bounds);
     this.createRandomResources(bounds);
     this.nests.push(new Nest(basePosition));
-    this.createBots(bounds, 5, basePosition);
+    this.createBots(bounds, 2, basePosition);
   }
 
   update() {

@@ -14,7 +14,8 @@ class Bot {
   }
 
   update() {
-    this.move();
+    //this.move();
+    this.goHome();
     // look around?
     // collect resources?
   }
@@ -48,6 +49,21 @@ class Bot {
 
   get resources() {
     return this.life;
+  }
+
+  goHome() {
+    const dx = ((this.basePosition.y + 25) - this.position.y);
+    const dy = ((this.basePosition.x + 25) - this.position.x);
+    const dist = Math.abs(Math.sqrt(dx * dx + dy * dy));
+    const Angle = Math.atan2(dx, dy);
+    const perFrameDistance = 1;
+    // Sin is x angle Cos is y angle
+    const Sin = Math.sin(Angle) * perFrameDistance;
+    const Cos = Math.cos(Angle) * perFrameDistance;
+    if (dist > 1) {
+      this.position.x += Cos;
+      this.position.y += Sin;
+    }
   }
 }
 
