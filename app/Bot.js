@@ -28,9 +28,16 @@ class Bot {
     if (this.resources <= 0) {
       return;
     }
-    const movement = this.goTowards(this.nestPosition);
+    let movement;
+    if (this.costToDestination(this.nestPosition)*1.5 > this.resources) {
+      movement = this.goTowards(this.nestPosition);
+    }
+    else {
+      movement = new Vec.Random(1, 1);
+    }
     this.position.add(movement);
-    this.resources -= Bot.CONSUMPTION * movement.length();
+    this.resources -= this.calculateCost(movement);
+
   }
 
   /**
@@ -112,6 +119,16 @@ class Bot {
 
   addResource(resource) {
     this.inventory.push(resource);
+  }
+
+  calculateCost(movement) {
+    return Bot.CONSUMPTION * movement.length();
+  }
+
+  costToDestination(destination) {
+    // TODO: Fix cost from bot position to new destination. This doest not work.
+    const costToDestination = this.calculateCost(destination);
+    return costToDestination;
   }
 }
 
