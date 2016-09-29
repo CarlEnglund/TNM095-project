@@ -15,8 +15,12 @@ class Renderer {
     world.drawables.forEach((drawable) => {
       // draw drawable
       const { style, size, position } = drawable;
+      const drawPosition = {
+        x: position.x - (size.x / 2),
+        y: position.y - (size.y / 2),
+      };
       ctx.fillStyle = style;
-      ctx.fillRect(position.x, position.y, size.x, size.y);
+      ctx.fillRect(drawPosition.x, drawPosition.y, size.x, size.y);
     });
   }
 }

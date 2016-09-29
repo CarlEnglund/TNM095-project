@@ -85,8 +85,8 @@ class Bot {
   }
 
   goHome() {
-    const dx = ((this.basePosition.y + 25) - this.position.y);
-    const dy = ((this.basePosition.x + 25) - this.position.x);
+    const dx = this.basePosition.y - this.position.y;
+    const dy = this.basePosition.x - this.position.x;
     const dist = Math.abs(Math.sqrt(dx * dx + dy * dy));
     const Angle = Math.atan2(dx, dy);
     // Sin is x angle, Cos is y angle
