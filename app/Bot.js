@@ -1,9 +1,9 @@
 const Vec = require('./Vec.js');
 
 class Bot {
-  constructor(position, basePosition) {
+  constructor(position, nestPosition) {
     this.position = position;
-    this.basePosition = basePosition;
+    this.nestPosition = nestPosition;
     this.life = 1;
     this.memory = [];
     this.inventory = [];
@@ -27,7 +27,7 @@ class Bot {
     if (this.resources <= 0) {
       return;
     }
-    const movement = this.goTowards(this.basePosition);
+    const movement = this.goTowards(this.nestPosition);
     this.position.add(movement);
     this.resources -= Bot.CONSUMPTION * movement.length();
   }
