@@ -7,16 +7,23 @@ class Bot {
     this.position = position;
     this.basePosition = basePosition;
     this.life = 1;
+    this.memory = [];
+    this.inventory = [];
   }
 
   static size() {
     return new Vec([6, 6]);
   }
 
-  update() {
+  /**
+   *
+   * @param world {World}
+   */
+  update(world) {
+    this.scan(world);
     //this.move();
+    // TODO: make this decision in `.move()`
     this.goHome();
-    // look around?
     // collect resources?
   }
 
@@ -26,6 +33,32 @@ class Bot {
     }
     this.position.add(this.movement);
     this.resources -= COST;
+  }
+
+  /**
+   * scan the bot's surroundings for resources
+   * @param world {World}
+   */
+  scan(world) {
+    const resources = world.availableResources(this.position);
+    // pluck positions
+    let positions = resources.map(r => r.position);
+    // filter out positions that the bot already remembers
+    positions = positions.filter(p => !this.isRemembered(p));
+
+    let newMemory = this.memory.concat(positions);
+    newMemory = newMemory.sort(p => this.position.dist(p));
+    // copy the MEMORY_LIMIT best choices
+    this.memory = newMemory.slice(0, Bot.MEMORY_LIMIT).map(p => p.Copy());
+  }
+
+  /**
+   * see if `pos` is in the bot's memory
+   * @param pos
+   * @returns {boolean}
+   */
+  isRemembered(pos) {
+    return this.memory.some(memoryPosition => memoryPosition.equals(pos));
   }
 
   get movement() {
@@ -66,5 +99,8 @@ class Bot {
     }
   }
 }
+
+Bot.SIGHT = 100;
+Bot.MEMORY_LIMIT = 3;
 
 export default Bot;

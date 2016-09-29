@@ -26,7 +26,7 @@ class World {
 
   update() {
     this.nests.forEach(nest => nest.update());
-    this.bots.forEach(bot => bot.update());
+    this.bots.forEach(bot => bot.update(this));
   }
 
   createRandomResources(bounds, amount = 100) {
@@ -43,6 +43,15 @@ class World {
 
   get drawables() {
     return this.bots.concat(this.nests).concat(this.resources);
+  }
+
+  /**
+   * get resources close enough to `pos`
+   * @param pos {Vec}
+   * @param ignore {Array<Resources>}
+   */
+  availableResources(pos, ignore = []) {
+    return this.resources.filter(r => r.position.manhattan(pos) < Bot.SIGHT && !ignore.includes(r));
   }
 }
 

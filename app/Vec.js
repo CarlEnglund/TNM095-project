@@ -1,6 +1,9 @@
 /**
  * 2D vector
  */
+
+const EPSILON = 1e-10;
+
 class Vec {
   /**
    * construct the coords, either by sending in an array of length 2 or an object {x: 0, y: 0}
@@ -30,6 +33,10 @@ class Vec {
       y: (Math.random() * (maxY - minY)) + minY,
     };
     return new Vec(coords);
+  }
+
+  Copy() {
+    return new Vec([this.x, this.y]);
   }
 
   get x() {
@@ -64,6 +71,19 @@ class Vec {
    */
   dist(vec) {
     return Math.sqrt(Math.pow(this.x + vec.x, 2) + Math.pow(this.y + vec.y, 2));
+  }
+
+  /**
+   * calculate the manhattan distance from `this` to `vec`
+   * @param vec {Vec}
+   * @returns {number}
+   */
+  manhattan(vec) {
+    return Math.abs(vec.x - this.x) + Math.abs(vec.y - this.y);
+  }
+
+  equals(vec) {
+    return this.dist(vec) < EPSILON;
   }
 }
 
