@@ -20,6 +20,7 @@ class Bot {
   update(world) {
     this.scan(world);
     this.move();
+    this.collectResources(world);
     // collect resources?
   }
 
@@ -58,8 +59,19 @@ class Bot {
     return this.memory.some(memoryPosition => memoryPosition.equals(pos));
   }
 
-  get movement() {
-    return new Vec.Random({ minX: -1, minY: -1, maxX: 1, maxY: 1 });
+  collectResources(world) {
+    const resources = world.availableResources(this.position, Bot.REACH_LENGTH);
+    if (resources.length == 0) return;
+
+    resources.forEach((r) => {
+      if (this.canCarryMore) {
+        r.transfer(world, this);
+      }
+    });
+  }
+
+  get canCarryMore() {
+    return this.inventory.length < Bot.INVENTORY_LIMIT;
   }
 
   get size() {
@@ -92,11 +104,22 @@ class Bot {
     // Sin is y angle, Cos is x angle
     return new Vec([Math.cos(angle) * Bot.SPEED, Math.sin(angle) * Bot.SPEED]);
   }
+
+  removeResource(resource) {
+    const index = this.inventory.indexOf(resource);
+    this.inventory.splice(index, 1);
+  }
+
+  addResource(resource) {
+    this.inventory.push(resource);
+  }
 }
 
 Bot.MANHATTAN_SIGHT = 10;
 Bot.MEMORY_LIMIT = 3;
+Bot.INVENTORY_LIMIT = 3;
 Bot.SPEED = 1;
 Bot.CONSUMPTION = 0.001;
+Bot.REACH_LENGTH = 2;
 
 export default Bot;

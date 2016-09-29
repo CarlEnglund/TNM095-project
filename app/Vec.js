@@ -19,7 +19,7 @@ class Vec {
 
   /**
    * generate a random position with x and y as maximum values
-   * @param y [Number]
+   * @param min... {number}
    * @returns {Vec}
    * @constructor
    */
@@ -57,20 +57,24 @@ class Vec {
 
   /**
    * add content of `vec` to `this`
-   * @param vec [Vec]
+   * @param vec {Vec}
    */
   add(vec) {
     this.x += vec.x;
     this.y += vec.y;
   }
 
+  /**
+   * calculate length of vector (ie dist from (0,0))
+   * @returns {number}
+   */
   length() {
     return this.dist(new Vec());
   }
 
   /**
    * calculate the euclidean distance from `this` to `vec`
-   * @param vec
+   * @param vec {Vec}
    * @returns {number}
    */
   dist(vec) {
@@ -86,6 +90,11 @@ class Vec {
     return Math.abs(vec.x - this.x) + Math.abs(vec.y - this.y);
   }
 
+  /**
+   * check if given position is same (IE very close) to `this`
+   * @param vec {Vec}
+   * @returns {boolean}
+   */
   equals(vec) {
     return this.dist(vec) < EPSILON;
   }

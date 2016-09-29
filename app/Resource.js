@@ -24,6 +24,11 @@ class Resource {
   get size() {
     return Resource.size();
   }
+
+  transfer(from, to) {
+    from.removeResource(this);
+    to.addResource(this);
+  }
 }
 
 export default Resource;

@@ -48,10 +48,18 @@ class World {
   /**
    * get resources close enough to `pos`
    * @param pos {Vec}
-   * @param ignore {Array<Resources>}
    */
-  availableResources(pos, ignore = []) {
-    return this.resources.filter(r => r.position.manhattan(pos) < Bot.MANHATTAN_SIGHT && !ignore.includes(r));
+  availableResources(pos, distanceLimit = Bot.MANHATTAN_SIGHT) {
+    return this.resources.filter(r => r.position.manhattan(pos) < distanceLimit);
+  }
+
+  removeResource(resource) {
+    const index = this.resources.indexOf(resource);
+    this.resources.splice(index, 1);
+  }
+
+  addResource(resource) {
+    this.resources.push(resource);
   }
 }
 
