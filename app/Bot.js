@@ -1,7 +1,5 @@
 const Vec = require('./Vec.js');
 
-const COST = 0.001;
-
 class Bot {
   constructor(position, basePosition) {
     this.position = position;
@@ -21,9 +19,7 @@ class Bot {
    */
   update(world) {
     this.scan(world);
-    //this.move();
-    // TODO: make this decision in `.move()`
-    this.goHome();
+    this.move();
     // collect resources?
   }
 
@@ -31,8 +27,9 @@ class Bot {
     if (this.resources <= 0) {
       return;
     }
-    this.position.add(this.movement);
-    this.resources -= COST;
+    const movement = this.goTowards(this.basePosition);
+    this.position.add(movement);
+    this.resources -= Bot.CONSUMPTION * movement.length();
   }
 
   /**
@@ -84,23 +81,22 @@ class Bot {
     return this.life;
   }
 
-  goHome() {
-    const dx = this.basePosition.y - this.position.y;
-    const dy = this.basePosition.x - this.position.x;
-    const dist = Math.abs(Math.sqrt(dx * dx + dy * dy));
-    const Angle = Math.atan2(dx, dy);
-    // Sin is x angle, Cos is y angle
-    const Sin = Math.sin(Angle) * Bot.SPEED;
-    const Cos = Math.cos(Angle) * Bot.SPEED;
-    if (dist > 1) {
-      this.position.x += Cos;
-      this.position.y += Sin;
-    }
+  /**
+   * go to position pos
+   * @param pos {Vec}
+   */
+  goTowards(pos) {
+    const dx = pos.y - this.position.y;
+    const dy = pos.x - this.position.x;
+    const angle = Math.atan2(dx, dy);
+    // Sin is y angle, Cos is x angle
+    return new Vec([Math.cos(angle) * Bot.SPEED, Math.sin(angle) * Bot.SPEED]);
   }
 }
 
 Bot.MANHATTAN_SIGHT = 10;
 Bot.MEMORY_LIMIT = 3;
 Bot.SPEED = 1;
+Bot.CONSUMPTION = 0.001;
 
 export default Bot;

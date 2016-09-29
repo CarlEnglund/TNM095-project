@@ -64,6 +64,10 @@ class Vec {
     this.y += vec.y;
   }
 
+  length() {
+    return this.dist(new Vec());
+  }
+
   /**
    * calculate the euclidean distance from `this` to `vec`
    * @param vec
