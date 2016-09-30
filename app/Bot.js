@@ -18,6 +18,9 @@ class Bot {
    * @param world {World}
    */
   update(world) {
+    if (this.resources <= 0) {
+      return;
+    }
     this.scan(world);
     this.move();
     this.collectResources(world);
@@ -25,19 +28,21 @@ class Bot {
   }
 
   move() {
-    if (this.resources <= 0) {
-      return;
-    }
     let movement;
-    if (this.costToDestination(this.nestPosition)*1.5 > this.resources) {
+    if (!this.canCarryMore || this.costToDestination(this.nestPosition) * 1.5 > this.resources) {
+      console.log('home', 'i', this.inventory.length, this.memory.length);
       movement = this.goTowards(this.nestPosition);
     }
+    else if (this.canCarryMore && this.hasMemory) {
+      console.log('collecting', 'i', this.inventory.length, this.memory.length);
+      movement = this.goTowards(this.bestMemory);
+    }
     else {
-      movement = new Vec.Random(1, 1);
+      console.log('random', 'i', this.inventory.length, this.memory.length);
+      movement = new Vec.Random({maxX: 1, maxY: 1, minX: -1, minY: -1});
     }
     this.position.add(movement);
     this.resources -= this.calculateCost(movement);
-
   }
 
   /**
@@ -46,13 +51,21 @@ class Bot {
    */
   scan(world) {
     const resources = world.availableResources(this.position);
+    if (resources.length === 0) {
+      return;
+    }
     // pluck positions
     let positions = resources.map(r => r.position);
     // filter out positions that the bot already remembers
     positions = positions.filter(p => !this.isRemembered(p));
 
-    let newMemory = this.memory.concat(positions);
-    newMemory = newMemory.sort(p => this.position.dist(p));
+    const newMemory = this.memory.concat(positions).sort((a, b) => {
+      if (this.position.dist(a) < this.position.dist(b)) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
     // copy the MEMORY_LIMIT best choices
     this.memory = newMemory.slice(0, Bot.MEMORY_LIMIT).map(p => p.Copy());
   }
@@ -68,17 +81,37 @@ class Bot {
 
   collectResources(world) {
     const resources = world.availableResources(this.position, Bot.REACH_LENGTH);
-    if (resources.length == 0) return;
 
     resources.forEach((r) => {
       if (this.canCarryMore) {
         r.transfer(world, this);
+        this.removeFromMemory(r.position);
       }
+    });
+  }
+
+  /**
+   * remove pos from memory
+   * @param pos {Vec}
+   */
+  removeFromMemory(pos) {
+    const positions = this.memory.filter(v => v.equals(pos));
+    positions.forEach((p) => {
+      const index = this.memory.indexOf(p);
+      this.memory.splice(index, 1);
     });
   }
 
   get canCarryMore() {
     return this.inventory.length < Bot.INVENTORY_LIMIT;
+  }
+
+  get hasMemory() {
+    return this.memory.length > 0;
+  }
+
+  get bestMemory() {
+    return this.memory[0] || new Vec();
   }
 
   get size() {
@@ -126,9 +159,7 @@ class Bot {
   }
 
   costToDestination(destination) {
-    // TODO: Fix cost from bot position to new destination. This doest not work.
-    const costToDestination = this.calculateCost(destination);
-    return costToDestination;
+    return this.calculateCost(destination.delta(this.position));
   }
 }
 

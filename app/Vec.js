@@ -98,6 +98,15 @@ class Vec {
   equals(vec) {
     return this.dist(vec) < EPSILON;
   }
+
+  /**
+   * get vector from `this` to `vec`
+   * @param vec {Vec}
+   * @returns {Vec}
+   */
+  delta(vec) {
+    return new Vec([this.x - vec.x, this.y - vec.y]);
+  }
 }
 
 export default Vec;
