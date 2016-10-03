@@ -10,8 +10,7 @@ class Renderer {
   draw(world) {
     const ctx = this.canvas.getContext('2d');
 
-
-    ctx.clearRect(0, 0, 800, 600);
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     world.drawables.forEach((drawable) => {
       // draw drawable
       const { style, size, position } = drawable;
