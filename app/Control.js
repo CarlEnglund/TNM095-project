@@ -4,6 +4,8 @@ const World = require('./World.js');
 const Renderer = require('./Renderer.js');
 const Gui = require('./Gui.js');
 
+require("../css/application.scss");
+
 class Control {
   constructor(elementId = 'application', size = { w: 800, h: 600 }) {
     this.world = new World(size);

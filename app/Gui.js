@@ -1,5 +1,5 @@
-const dat = require('dat.gui/build/dat.gui.js')
-const Bot = require('./Bot.js')
+const dat = require('dat.gui/build/dat.gui.js');
+const Bot = require('./Bot.js');
 
 class Gui {
   constructor() {
@@ -11,7 +11,7 @@ class Gui {
     };
     const Folder = gui.addFolder('Bot Parameters');
 
-    const guiSpeed = Folder.add(params, 'speed').min(0).max(3).step(3).listen();
+    const guiSpeed = Folder.add(params, 'speed').min(0).max(3).step(0.1).listen();
     const guiReach = Folder.add(params, 'reach').min(1).max(50).step(1).listen();
     const guiSight = Folder.add(params, 'sight').min(1).max(50).step(1).listen();
     Folder.open();
