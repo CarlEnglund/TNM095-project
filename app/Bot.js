@@ -14,7 +14,7 @@ class Bot {
   }
 
   /**
-   *
+   * run a cycle of this bot's life
    * @param world {World}
    */
   update(world) {
@@ -24,21 +24,20 @@ class Bot {
     this.scan(world);
     this.move();
     this.collectResources(world);
-    // collect resources?
   }
 
   move() {
     let movement;
     if (!this.canCarryMore || this.costToDestination(this.nestPosition) * 1.5 > this.resources) {
-      console.log('home', 'i', this.inventory.length, this.memory.length);
+      console.log('home', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
       movement = this.goTowards(this.nestPosition);
     }
     else if (this.canCarryMore && this.hasMemory) {
-      console.log('collecting', 'i', this.inventory.length, this.memory.length);
+      console.log('collecting', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
       movement = this.goTowards(this.bestMemory);
     }
     else {
-      console.log('random', 'i', this.inventory.length, this.memory.length);
+      console.log('random', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
       movement = new Vec.Random({maxX: 1, maxY: 1, minX: -1, minY: -1});
     }
     this.position.add(movement);
@@ -85,21 +84,33 @@ class Bot {
     resources.forEach((r) => {
       if (this.canCarryMore) {
         r.transfer(world, this);
-        this.removeFromMemory(r.position);
+        this.removePosFromMemory(r.position);
       }
     });
+
+    // TODO: clean this up
+    // remove position from memory if there is no resource closest at the position
+    if (resources.length === 0 && this.hasMemory && this.position.dist(this.memory[0]) < Bot.REACH_LENGTH) {
+      this.removeRefFromMemory(this.memory[0]);
+    }
   }
 
   /**
-   * remove pos from memory
+   * remove pos from memory by searching through this.memory for similar positions
    * @param pos {Vec}
    */
-  removeFromMemory(pos) {
+  removePosFromMemory(pos) {
     const positions = this.memory.filter(v => v.equals(pos));
-    positions.forEach((p) => {
-      const index = this.memory.indexOf(p);
-      this.memory.splice(index, 1);
-    });
+    positions.forEach(this.removeRefFromMemory.bind(this));
+  }
+
+  /**
+   * remove pos from this.memory, pos is a reference to an entry in this.memory
+   * @param pos
+   */
+  removeRefFromMemory(pos) {
+    const index = this.memory.indexOf(pos);
+    this.memory.splice(index, 1);
   }
 
   get canCarryMore() {
