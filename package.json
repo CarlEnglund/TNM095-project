@@ -22,6 +22,8 @@
     "sass-loader": "latest",
     "style-loader": "latest",
     "webpack": "latest",
-    "webpack-dev-server": "latest"
+    "webpack-dev-server": "latest",
+    "dat.gui": "latest",
+    "normalize.css": "latest"
   }
 }
