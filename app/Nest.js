@@ -5,7 +5,7 @@ class Nest {
     this.position = position;
     this.width = width;
     this.height = height;
-    this.resources = resources;
+    this.resources = [];
   }
 
   update() {
@@ -38,6 +38,11 @@ class Nest {
 
   removeResourceFromNest() {
     this.resources--;
+  }
+
+  addResource(resource) {
+    this.resources.push(resource);
+    this.growNest();
   }
 }
 export default Nest;
