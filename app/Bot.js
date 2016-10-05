@@ -1,4 +1,5 @@
 const Vec = require('./Vec.js');
+const Path = require('./Path.js');
 
 class Bot {
   constructor(position, nestPosition, Nest) {
@@ -23,6 +24,7 @@ class Bot {
       return;
     }
     this.scan(world);
+    this.findPath();
     this.move();
     this.collectResources(world);
 
@@ -51,7 +53,7 @@ class Bot {
       movement = new Vec.Random({maxX: 1, maxY: 1, minX: -1, minY: -1});
     }
     this.position.add(movement);
-    this.resources -= this.calculateCost(movement);
+    this.resources -= Bot.calculateCost(movement);
   }
 
   /**
@@ -100,7 +102,7 @@ class Bot {
 
     // TODO: clean this up
     // remove position from memory if there is no resource closest at the position
-    if (resources.length === 0 && this.hasMemory && this.position.dist(this.memory[0]) < Bot.REACH_LENGTH) {
+    if (resources.length === 0 && this.hasMemory && this.position.dist(this.bestMemory) < Bot.REACH_LENGTH) {
       this.removeRefFromMemory(this.memory[0]);
     }
   }
@@ -175,20 +177,37 @@ class Bot {
     this.inventory.push(resource);
   }
 
-  calculateCost(movement) {
+  static calculateCost(movement) {
     return Bot.CONSUMPTION * movement.length();
   }
 
   costToDestination(destination) {
-    return this.calculateCost(destination.delta(this.position));
+    return Bot.calculateCost(destination.delta(this.position));
+  }
+
+  findPath(steps = Bot.PATH_STEPS) {
+    let paths = [];
+    this.memory.forEach((point) => {
+      // create path, add this point as the first
+      const path = new Path(this.position);
+      path.addPoint(point);
+
+      // add all other points in memory to the path
+      this.memory.filter(p => p !== point).forEach(p => path.addPoint(p));
+      paths.push(path);
+    });
+
+    // sort by result
+    paths = paths.sort((a, b) => a.result - b.result);
   }
 }
 
 Bot.MANHATTAN_SIGHT = 100;
-Bot.MEMORY_LIMIT = 3;
+Bot.MEMORY_LIMIT = 10;
 Bot.INVENTORY_LIMIT = 10;
 Bot.SPEED = 1;
 Bot.CONSUMPTION = 0.001;
 Bot.REACH_LENGTH = 2;
+Bot.PATH_STEPS = 3;
 
 export default Bot;
