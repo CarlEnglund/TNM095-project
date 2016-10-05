@@ -21,7 +21,7 @@ class World {
     const basePosition = new Vec.Random(bounds);
     this.createRandomResources(bounds);
     this.nests.push(new Nest(basePosition));
-    this.createBots(5, basePosition);
+    this.createBots(basePosition);
   }
 
   update() {
@@ -31,15 +31,15 @@ class World {
   }
 
   createRandomResources(bounds, amount = 100) {
-    while (--amount) {
+    while (amount--) {
       this.resources.push(new Resource(Vec.Random(bounds)));
     }
   }
 
-  createBots(amount = 10, basePosition) {
-    while (--amount) {
+  createBots(basePosition, amount = 1) {
+    while (amount--) {
       const botPos = basePosition.Copy();
-      botPos.add(Vec.Random({minX: -3, minY: -3, maxX: 3, minX: 3}));
+      botPos.add(Vec.Random({minX: -3, minY: -3, maxX: 3, maxY: 3}));
       this.bots.push(new Bot(botPos, basePosition));
     }
   }
@@ -51,6 +51,7 @@ class World {
   /**
    * get resources close enough to `pos`
    * @param pos {Vec}
+   * @param distanceLimit {Number} how long the difference may be
    */
   availableResources(pos, distanceLimit = Bot.MANHATTAN_SIGHT) {
     return this.resources.filter(r => r.position.manhattan(pos) < distanceLimit);
