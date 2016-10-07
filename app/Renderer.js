@@ -20,8 +20,22 @@ class Renderer {
       };
       ctx.fillStyle = style;
       ctx.fillRect(drawPosition.x, drawPosition.y, size.x, size.y);
+
+      if (Renderer.DRAW_LINES && drawable.drawLines) {
+
+        const lines = drawable.drawLines();
+        if (lines.length > 0) {
+          const firstPos = lines.splice(0, 1)[0];
+          ctx.beginPath();
+          ctx.moveTo(firstPos.x, firstPos.y);
+          lines.forEach(v => ctx.lineTo(v.x, v.y));
+          ctx.stroke();
+        }
+      }
     });
   }
 }
+
+Renderer.DRAW_LINES = true;
 
 export default Renderer;

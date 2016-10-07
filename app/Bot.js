@@ -9,6 +9,7 @@ class Bot {
     this.memory = [];
     this.inventory = [];
     this.nest = Nest;
+    this.currentPath = new Path(this.position);
   }
 
   static size() {
@@ -24,7 +25,7 @@ class Bot {
       return;
     }
     this.scan(world);
-    this.findPath();
+    this.findPath(this.capacity);
     this.move();
     this.collectResources(world);
 
@@ -126,7 +127,7 @@ class Bot {
   }
 
   get canCarryMore() {
-    return this.inventory.length < Bot.INVENTORY_LIMIT;
+    return this.capacity > 0;
   }
 
   get hasMemory() {
@@ -143,6 +144,10 @@ class Bot {
 
   get style() {
     return 'green';
+  }
+
+  get capacity() {
+    return Bot.INVENTORY_LIMIT - this.memory.length;
   }
 
   set resources(resources) {
@@ -204,6 +209,15 @@ class Bot {
 
     // set current path if this the found path is better that
     this.currentPath = paths[0];
+  }
+
+  /**
+   * get drawable line points for this
+   */
+  drawLines() {
+    const lines = [this.position];
+    const pathLines = this.currentPath.points;
+    return lines.concat(pathLines);
   }
 }
 
