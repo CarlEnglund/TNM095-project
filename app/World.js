@@ -65,6 +65,22 @@ class World {
   addResource(resource) {
     this.resources.push(resource);
   }
+
+  /**
+   * add debug info from world to gui
+   * @param gui {Gui}
+   */
+  addDebugInfo(gui) {
+    gui.addInfo(this);
+  }
+
+  get info() {
+    return {
+      resources: this.resources.length,
+      bots: this.bots.length,
+      nests: this.nests.length,
+    };
+  }
 }
 
 export default World;

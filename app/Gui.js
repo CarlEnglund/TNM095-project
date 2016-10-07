@@ -4,6 +4,12 @@ const Renderer = require('./Renderer.js');
 
 class Gui {
   constructor() {
+    this.gui = this.setupDat();
+    this.debugInfo = this.setupDebugInfo();
+    this.infoObjects = [];
+  }
+
+  setupDat() {
     const gui = new dat.GUI();
     const params = {
       sight: Bot.MANHATTAN_SIGHT,
@@ -38,6 +44,38 @@ class Gui {
     const guiLines = rendererFolder.add(params, 'lines').listen();
 
     guiLines.onChange((value) => { Renderer.DRAW_LINES = value; });
+
+    return gui;
+  }
+
+  setupDebugInfo() {
+    const debugInfo = this.gui.addFolder('Debug info');
+    debugInfo.open();
+    return debugInfo;
+  }
+
+  addInfo(object) {
+    const name = `${object.constructor.name} (#${Math.floor(Math.random() * 10000)})`;
+    const folder = this.debugInfo.addFolder(name);
+    this.infoObjects.push({ folder, object });
+    const { info } = object;
+    Object.keys(info).forEach(param => folder.add(info, param));
+  }
+
+  update(world) {
+    this.infoObjects.forEach((entry) => {
+      const { folder } = entry;
+      const { info } = entry.object;
+      for (var i in folder.__controllers) {
+        const param = folder.__controllers[i];
+        param.setValue(info[param.property]);
+        // folder.__controllers[i].setValue().updateDisplay();
+      }
+    });
+
+    const knownObjects = this.infoObjects.map(o => o.object);
+    const infoObjects = world.bots.concat(world.nests);
+    infoObjects.filter(b => !knownObjects.includes(b)).forEach(b => this.addInfo(b));
   }
 }
 export default Gui;

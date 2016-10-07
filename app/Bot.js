@@ -207,6 +207,10 @@ class Bot {
     // sort by result
     paths = paths.sort((a, b) => a.result - b.result);
 
+    console.log('memory', this.memory.length,
+      'path length: ', ((this.currentPath || {}).points || {}).length,
+      'cost', (this.currentPath || {}).result);
+
     // set current path if this the found path is better that
     this.currentPath = paths[0];
   }
@@ -218,6 +222,15 @@ class Bot {
     const lines = [this.position];
     const pathLines = this.currentPath.points;
     return lines.concat(pathLines);
+  }
+
+  get info() {
+    return {
+      position: `(${Math.round(this.position.x)}, ${Math.round(this.position.y)})`,
+      life: this.life,
+      memory: this.memory.length,
+      inventory: this.inventory.length,
+    };
   }
 }
 

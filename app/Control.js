@@ -12,17 +12,18 @@ class Control {
     this.canvas = document.createElement('canvas');
     this.canvas.width = size.w;
     this.canvas.height = size.h;
-    const gui = new Gui();
+    this.gui = new Gui();
+
     const parent = document.getElementById(elementId);
     parent.appendChild(this.canvas);
 
     this.renderer = new Renderer(this.canvas);
-
   }
 
   start() {
     console.info('Starting simulation...');
     this.world.init();
+    this.world.addDebugInfo(this.gui);
     window.requestAnimationFrame(this.render.bind(this));
   }
 
@@ -30,6 +31,7 @@ class Control {
     // IT'S ALIVE
     this.renderer.draw(this.world);
     this.world.update();
+    this.gui.update(this.world);
     window.requestAnimationFrame(this.render.bind(this));
   }
 }

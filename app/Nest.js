@@ -1,7 +1,7 @@
 const Vec = require('./Vec.js');
 
 class Nest {
-  constructor(position, width = 50, height = 50, resources = 1) {
+  constructor(position, width = 50, height = 50) {
     this.position = position;
     this.width = width;
     this.height = height;
@@ -50,10 +50,6 @@ class Nest {
     setTimeout(this.removeResourceFromNest.bind(this), 5000);
   }
 
-  addResourceToNest() {
-    this.resources++;
-  }
-
   removeResourceFromNest() {
     console.log(this)
     this.resources.pop();
@@ -62,6 +58,13 @@ class Nest {
   addResource(resource) {
     this.resources.push(resource);
     this.growNest();
+  }
+
+  get info () {
+    return {
+      position: `(${Math.round(this.position.x)}, ${Math.round(this.position.y)})`,
+      resources: this.resources.length,
+    };
   }
 }
 export default Nest;
