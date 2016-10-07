@@ -192,13 +192,18 @@ class Bot {
       const path = new Path(this.position);
       path.addPoint(point);
 
-      // add all other points in memory to the path
-      this.memory.filter(p => p !== point).forEach(p => path.addPoint(p));
+      // add `steps` points from memory to the path
+      this.memory.filter(p => p !== point).forEach(path.addPoint.bind(path));
+      path.points.splice(0, steps);
+
       paths.push(path);
     });
 
     // sort by result
     paths = paths.sort((a, b) => a.result - b.result);
+
+    // set current path if this the found path is better that
+    this.currentPath = paths[0];
   }
 }
 
