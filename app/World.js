@@ -25,7 +25,7 @@ class World {
   }
 
   update() {
-    this.nests.forEach(nest => nest.update());
+    this.nests.forEach(nest => nest.update(this));
     this.bots.forEach(bot => bot.update(this));
     // add random resources
   }
