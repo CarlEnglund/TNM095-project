@@ -2,9 +2,8 @@ const Vec = require('./Vec.js');
 const Path = require('./Path.js');
 
 class Bot {
-  constructor(position, nestPosition, nest) {
+  constructor(position, nest) {
     this.position = position;
-    this.nestPosition = nestPosition;
     this.life = 1;
     this.memory = [];
     this.inventory = [];
@@ -31,7 +30,7 @@ class Bot {
     this.collectResources(world);
 
     //TODO: We should know when the bot is in the nest in a better way..
-    if (this.costToDestination(this.nestPosition) < 0.02 && this.inventory.length) {
+    if (this.costToDestination(this.nest.position) < 0.02 && this.inventory.length) {
       this.inventory.forEach((r) => {
         r.resourceLevel -= 1 / 10;
         r.transfer(this, this.nest);
@@ -42,18 +41,15 @@ class Bot {
 
   move() {
     let movement;
-    if (!this.canCarryMore || this.costToDestination(this.nestPosition) * 1.5 > this.resources) {
-      //console.log('home', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
-      movement = this.goTowards(this.nestPosition);
+    if (!this.canCarryMore || this.costToDestination(this.nest.position) * 1.5 > this.resources) {
+      movement = this.goTowards(this.nest.position);
       this.strategy = 'home';
     }
     else if (this.canCarryMore && this.pathMove) {
-      //console.log('collecting', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
       movement = this.goTowards(this.pathMove);
       this.strategy = 'collect';
     }
     else {
-      //console.log('random', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
       movement = new Vec.Random({maxX: 1, maxY: 1, minX: -1, minY: -1});
       this.strategy = 'search';
     }
