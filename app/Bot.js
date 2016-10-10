@@ -45,9 +45,9 @@ class Bot {
       //console.log('home', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
       movement = this.goTowards(this.nestPosition);
     }
-    else if (this.canCarryMore && this.hasMemory) {
+    else if (this.canCarryMore && this.pathMove) {
       //console.log('collecting', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
-      movement = this.goTowards(this.bestMemory);
+      movement = this.goTowards(this.pathMove);
     }
     else {
       //console.log('random', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
@@ -138,6 +138,10 @@ class Bot {
     return this.memory[0] || new Vec();
   }
 
+  get pathMove() {
+    return this.currentPath.firstPoint;
+  }
+
   get size() {
     return Bot.size();
   }
@@ -191,6 +195,7 @@ class Bot {
   }
 
   findPath(steps = Bot.PATH_STEPS) {
+    console.log('steps:', steps);
     let paths = [];
     this.memory.forEach((point) => {
       // create path, add this point as the first
@@ -198,21 +203,20 @@ class Bot {
       path.addPoint(point);
 
       // add `steps` points from memory to the path
-      this.memory.filter(p => p !== point).forEach(path.addPoint.bind(path));
-      path.points.splice(0, steps);
+      this.memory.filter(p => p !== point).forEach(p => path.addPoint(p));
+      path.points.splice(steps, path.points.length);
 
       paths.push(path);
     });
 
     // sort by result
     paths = paths.sort((a, b) => a.result - b.result);
+    // set current path if this the found path is better that
+    this.currentPath = paths[0] || new Path(this.position);
 
     console.log('memory', this.memory.length,
       'path length: ', ((this.currentPath || {}).points || {}).length,
       'cost', (this.currentPath || {}).result);
-
-    // set current path if this the found path is better that
-    this.currentPath = paths[0];
   }
 
   /**

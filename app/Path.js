@@ -28,6 +28,10 @@ class Path {
     return this.points[this.points.length - 1] || this.start;
   }
 
+  get firstPoint() {
+    return this.points[0];
+  }
+
   /**
    * calculate cost per gained resource
    * @returns {number}
