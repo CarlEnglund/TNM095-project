@@ -69,12 +69,11 @@ class Gui {
       for (var i in folder.__controllers) {
         const param = folder.__controllers[i];
         param.setValue(info[param.property]);
-        // folder.__controllers[i].setValue().updateDisplay();
       }
     });
 
     const knownObjects = this.infoObjects.map(o => o.object);
-    const infoObjects = world.bots.concat(world.nests);
+    const infoObjects = world.nests.concat(world.bots);
     infoObjects.filter(b => !knownObjects.includes(b)).forEach(b => this.addInfo(b));
   }
 }
