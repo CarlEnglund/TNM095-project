@@ -50,8 +50,8 @@ class Bot {
       this.strategy = 'collect';
     }
     else {
-      this.angle -= Math.PI / 200;
-      movement = this.goTowards(new Vec([this.nestPosition.x + (Math.cos(this.angle) * 500), this.nestPosition.y + (Math.sin(this.angle) * 500)]));
+      this.angle -= Math.PI / 300;
+      movement = this.goTowards(new Vec([this.nest.position.x + (Math.cos(this.angle) * 500), this.nest.position.y + (Math.sin(this.angle) * 500)]));
       this.strategy = 'search';
     }
     this.position.add(movement);
