@@ -2,13 +2,14 @@ const Vec = require('./Vec.js');
 const Path = require('./Path.js');
 
 class Bot {
-  constructor(position, nestPosition, Nest) {
+  constructor(position, nestPosition, nest) {
     this.position = position;
     this.nestPosition = nestPosition;
     this.life = 1;
     this.memory = [];
     this.inventory = [];
-    this.nest = Nest;
+    this.nest = nest;
+    this.strategy = '';
     this.currentPath = new Path(this.position);
   }
 
@@ -44,14 +45,17 @@ class Bot {
     if (!this.canCarryMore || this.costToDestination(this.nestPosition) * 1.5 > this.resources) {
       //console.log('home', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
       movement = this.goTowards(this.nestPosition);
+      this.strategy = 'home';
     }
     else if (this.canCarryMore && this.pathMove) {
       //console.log('collecting', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
       movement = this.goTowards(this.pathMove);
+      this.strategy = 'collect';
     }
     else {
       //console.log('random', 'inventory:', this.inventory.length, 'memory:', this.memory.length);
       movement = new Vec.Random({maxX: 1, maxY: 1, minX: -1, minY: -1});
+      this.strategy = 'search';
     }
     this.position.add(movement);
     this.resources -= Bot.calculateCost(movement);
@@ -195,7 +199,10 @@ class Bot {
   }
 
   findPath(steps = Bot.PATH_STEPS) {
-    console.log('steps:', steps);
+    if (this.pathMove && this.pathMove.dist(this.position) > Bot.REACH_LENGTH) {
+      return;
+    }
+
     let paths = [];
     this.memory.forEach((point) => {
       // create path, add this point as the first
@@ -203,8 +210,12 @@ class Bot {
       path.addPoint(point);
 
       // add `steps` points from memory to the path
-      this.memory.filter(p => p !== point).forEach(p => path.addPoint(p));
-      path.points.splice(steps, path.points.length);
+      let count = 0;
+      this.memory.filter(p => p !== point).forEach((p) => {
+        if (count++ < steps) {
+          path.addPoint(p);
+        }
+      });
 
       paths.push(path);
     });
@@ -213,10 +224,6 @@ class Bot {
     paths = paths.sort((a, b) => a.result - b.result);
     // set current path if this the found path is better that
     this.currentPath = paths[0] || new Path(this.position);
-
-    console.log('memory', this.memory.length,
-      'path length: ', ((this.currentPath || {}).points || {}).length,
-      'cost', (this.currentPath || {}).result);
   }
 
   /**
@@ -230,10 +237,14 @@ class Bot {
 
   get info() {
     return {
-      position: `(${Math.round(this.position.x)}, ${Math.round(this.position.y)})`,
-      life: this.life,
-      memory: this.memory.length,
-      inventory: this.inventory.length,
+      position: this.position.roundedString,
+      strategy: this.strategy,
+      life: this.life || 0,
+      memory: this.memory.length || 0,
+      inventory: this.inventory.length || 0,
+      pathCost: this.currentPath.cost || 0,
+      pathLenght: this.currentPath.points.length || 0,
+      pathResult: this.currentPath.result || 0,
     };
   }
 }

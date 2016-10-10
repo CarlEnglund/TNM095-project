@@ -107,6 +107,10 @@ class Vec {
   delta(vec) {
     return new Vec([this.x - vec.x, this.y - vec.y]);
   }
+
+  get roundedString() {
+    return `(${Math.round(this.x)}, ${Math.round(this.y)})`;
+  }
 }
 
 export default Vec;
