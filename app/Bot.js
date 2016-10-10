@@ -10,6 +10,7 @@ class Bot {
     this.nest = nest;
     this.strategy = '';
     this.currentPath = new Path(this.position);
+    this.angle = 100 * Math.PI / 180;
   }
 
   static size() {
@@ -28,7 +29,6 @@ class Bot {
     this.findPath(this.capacity);
     this.move();
     this.collectResources(world);
-
     //TODO: We should know when the bot is in the nest in a better way..
     if (this.costToDestination(this.nest.position) < 0.02 && this.inventory.length) {
       this.inventory.forEach((r) => {
@@ -41,7 +41,7 @@ class Bot {
 
   move() {
     let movement;
-    if (!this.canCarryMore || this.costToDestination(this.nest.position) * 1.5 > this.resources) {
+    if (!this.canCarryMore || this.costToDestination(this.nest.position) > this.resources) {
       movement = this.goTowards(this.nest.position);
       this.strategy = 'home';
     }
@@ -50,7 +50,8 @@ class Bot {
       this.strategy = 'collect';
     }
     else {
-      movement = new Vec.Random({maxX: 1, maxY: 1, minX: -1, minY: -1});
+      this.angle -= Math.PI / 200;
+      movement = this.goTowards(new Vec([this.nestPosition.x + (Math.cos(this.angle) * 500), this.nestPosition.y + (Math.sin(this.angle) * 500)]));
       this.strategy = 'search';
     }
     this.position.add(movement);
@@ -218,6 +219,11 @@ class Bot {
 
     // sort by result
     paths = paths.sort((a, b) => a.result - b.result);
+
+    /*console.log('memory', this.memory.length,
+      'path length: ', ((this.currentPath || {}).points || {}).length,
+      'cost', (this.currentPath || {}).result);*/
+
     // set current path if this the found path is better that
     this.currentPath = paths[0] || new Path(this.position);
   }
@@ -241,6 +247,7 @@ class Bot {
       pathCost: this.currentPath.cost || 0,
       pathLenght: this.currentPath.points.length || 0,
       pathResult: this.currentPath.result || 0,
+      angle: this.angle
     };
   }
 }
