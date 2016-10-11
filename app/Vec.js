@@ -95,8 +95,8 @@ class Vec {
    * @param vec {Vec}
    * @returns {boolean}
    */
-  equals(vec) {
-    return this.dist(vec) < EPSILON;
+  equals(vec, accuracy = EPSILON) {
+    return this.dist(vec) < accuracy;
   }
 
   /**
@@ -112,5 +112,7 @@ class Vec {
     return `(${Math.round(this.x)}, ${Math.round(this.y)})`;
   }
 }
+
+Vec.EPSILON = EPSILON;
 
 export default Vec;

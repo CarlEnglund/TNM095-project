@@ -53,7 +53,8 @@ class Bot {
     }
     else {
       this.angleDirection > 0 ? (this.angle -= Math.PI / 600) : (this.angle += Math.PI / 600);
-      movement = this.goTowards(new Vec([this.nest.position.x + (Math.cos(this.angle) * 500), this.nest.position.y + (Math.sin(this.angle) * 500)]));
+      movement = this.goTowards(new Vec([this.nest.position.x + (Math.cos(this.angle) * 500),
+                                         this.nest.position.y + (Math.sin(this.angle) * 500)]));
       this.strategy = 'search';
     }
     this.position.add(movement);
@@ -91,7 +92,7 @@ class Bot {
    * @returns {boolean}
    */
   isRemembered(pos) {
-    return this.memory.some(memoryPosition => memoryPosition.equals(pos));
+    return this.memory.some(memoryPosition => memoryPosition.equals(pos, Bot.REACH_LENGTH));
   }
 
   collectResources(world) {
@@ -104,10 +105,11 @@ class Bot {
       }
     });
 
-    // TODO: clean this up
     // remove position from memory if there is no resource closest at the position
-    if (resources.length === 0 && this.hasMemory && this.position.dist(this.bestMemory) < Bot.REACH_LENGTH) {
-      this.removeRefFromMemory(this.memory[0]);
+    if (resources.length === 0 && this.isRemembered(this.position)) {
+      // console.log('clean', this.position.roundedString);
+      this.removePosFromMemory(this.position, Bot.REACH_LENGTH);
+      this.resetPath();
     }
   }
 
@@ -116,21 +118,20 @@ class Bot {
       return;
     }
 
-    this.currentPath = new Path(this.position);
-
     this.inventory.forEach((r) => {
       r.transfer(this, this.nest);
     });
-
     this.nest.refule(this);
+    this.resetPath();
   }
 
   /**
    * remove pos from memory by searching through this.memory for similar positions
    * @param pos {Vec}
    */
-  removePosFromMemory(pos) {
-    const positions = this.memory.filter(v => v.equals(pos));
+  removePosFromMemory(pos, precision = Vec.EPSILON) {
+    const positions = this.memory.filter(v => v.equals(pos, precision));
+    // console.log(pos.roundedString, positions.length, this.memory.length, this.currentPath.points.length);
     positions.forEach(this.removeRefFromMemory.bind(this));
   }
 
@@ -192,6 +193,10 @@ class Bot {
     const angle = Math.atan2(dx, dy);
     // Sin is y angle, Cos is x angle
     return new Vec([Math.cos(angle) * Bot.SPEED, Math.sin(angle) * Bot.SPEED]);
+  }
+
+  resetPath() {
+    this.currentPath = new Path(this.position);
   }
 
   removeResource(resource) {
