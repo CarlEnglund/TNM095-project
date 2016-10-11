@@ -111,10 +111,10 @@ class Bot {
     this.currentPath = new Path(this.position);
 
     this.inventory.forEach((r) => {
-      r.resourceLevel -= 1 / 10;
       r.transfer(this, this.nest);
-      this.life += 1 / 10;
     });
+
+    this.nest.refule(this);
   }
 
   /**

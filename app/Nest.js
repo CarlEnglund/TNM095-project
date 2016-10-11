@@ -69,7 +69,7 @@ class Nest {
       position: `(${Math.round(this.position.x)}, ${Math.round(this.position.y)})`,
       resources: this.resources.length,
       resourceLevel: this.availableResources,
-      creationAvailable: this.creationAvailable,
+      status: this.creationAvailable ? 'creating' : 'idle',
     };
   }
 
@@ -101,10 +101,21 @@ class Nest {
   get lastResource() {
     return this.resources[this.resources.length - 1];
   }
+
+  refule(bot) {
+    const consumed = this.consumeResource(Nest.BOT_REFULE);
+    if (consumed !== Nest.BOT_REFULE) {
+      this.lastResource.resourceLevel += consumed;
+      return;
+    }
+
+    bot.life += consumed;
+  }
 }
 
 Nest.COMSUMPTION = 0.005;
 Nest.BOT_COST = 6;
 Nest.BOT_CREATION_TIME = 5000;
+Nest.BOT_REFULE = 1;
 
 export default Nest;
