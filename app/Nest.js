@@ -1,70 +1,110 @@
 const Vec = require('./Vec.js');
+const Resource = require('./Resource.js');
 
 class Nest {
-  constructor(position, width = 50, height = 50) {
+  constructor(position) {
     this.position = position;
-    this.width = width;
-    this.height = height;
-    this.resources = [];
+    this.resources = [new Resource(new Vec(), 10)];
     this.timeout = [];
+    this.creationAvailable = true;
   }
 
   update(world) {
-    if (this.width > 0 && this.height > 0 && this.resources.length) {
-      this.shrinkNest();
-    }
     if (this.resources.length) {
-      setTimeout(this.createBots.bind(world, this), 5000);
+      this.consumeResource();
+      // setTimeout(this.createBots.bind(world, this), 5000);
     }
-    console.log(this.resources.length)
+
+    if (this.canCreateBot) {
+      this.startBotCreation(world);
+    }
   }
 
   get style() {
     return 'red';
   }
 
-  createBots(nest) {
-    this.createBots(nest);
-    nest.resources.pop();
-    // Hacky way to clear timeouts, see http://stackoverflow.com/questions/3141064/how-to-stop-all-timeouts-and-intervals-using-javascript
-    // Third answer.
-    console.log('Created bot')
-    let highestTimeoutId = setTimeout(';');
-    for (let i = 0; i < highestTimeoutId; i++) {
-      clearTimeout(i);
+  get canCreateBot() {
+    const resources = this.availableResources;
+    const margin = 6 * Nest.BOT_COST;
+    return this.creationAvailable && resources > margin;
+  }
+
+  /**
+   * start creating a bot
+   * @param world {World}
+   */
+  startBotCreation(world) {
+    this.creationAvailable = false;
+    setTimeout(this.createBot.bind(this, world), Nest.BOT_CREATION_TIME);
+  }
+
+  createBot(world) {
+    const consumed = this.consumeResource(Nest.BOT_COST);
+    if (consumed !== Nest.BOT_COST) {
+      console.warn('Failed creating a bot, only consumed', consumed, 'resources. Expected', Nest.BOT_COST);
+      this.lastResource.resourceLevel += consumed;
+      return;
     }
+
+    world.createBots(this);
+    this.creationAvailable = true;
   }
+
   get size() {
-    return new Vec([this.width, this.height]);
-  }
-
-  growNest() {
-    this.width++;
-    this.height++;
-  }
-
-  shrinkNest() {
-    this.width -= (1/60);
-    this.height -= (1/60);
-    setTimeout(this.removeResourceFromNest.bind(this), 5000);
+    const size = this.availableResources;
+    return new Vec([size, size]);
   }
 
   removeResourceFromNest() {
-    console.log(this)
     this.resources.pop();
   }
 
   addResource(resource) {
     this.resources.push(resource);
-    this.growNest();
   }
 
   get info () {
     return {
       position: `(${Math.round(this.position.x)}, ${Math.round(this.position.y)})`,
       resources: this.resources.length,
+      resourceLevel: this.availableResources,
+      creationAvailable: this.creationAvailable,
     };
   }
-}
-export default Nest;
 
+  get availableResources() {
+    return this.resources.reduce((prev, r) => prev + r.resourceLevel, 0);
+  }
+
+  /**
+   *
+   * @param amount {number} how much to consume
+   * @returns {number} what actually was consumed, 0 if `amount` isn't available
+   */
+  consumeResource(amount = Nest.COMSUMPTION) {
+    if (this.availableResources < amount) return 0;
+
+    // see that the last resource has enough amount
+    const levelDiff = this.lastResource.resourceLevel - amount;
+    if (levelDiff > 0) {
+      this.lastResource.resourceLevel -= amount;
+      return amount;
+    } else {
+      // pop last resource, call this method again to consume the rest of the wanted resources
+      this.resources.pop();
+      const leftOvers = Math.abs(levelDiff);
+      return (amount - leftOvers) + this.consumeResource(leftOvers);
+    }
+  }
+
+  get lastResource() {
+    return this.resources[this.resources.length - 1];
+  }
+}
+
+Nest.COMSUMPTION = 0.005;
+Nest.BOT_COST = 6;
+Nest.BOT_CREATION_TIME = 5000;
+
+export default Nest;

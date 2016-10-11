@@ -23,7 +23,7 @@ class Bot {
    * @param world {World}
    */
   update(world) {
-    if (this.resources <= 0) {
+    if (this.life <= 0) {
       return;
     }
     this.scan(world);
@@ -227,10 +227,6 @@ class Bot {
 
     // sort by result
     paths = paths.sort((a, b) => a.result - b.result);
-
-    /*console.log('memory', this.memory.length,
-      'path length: ', ((this.currentPath || {}).points || {}).length,
-      'cost', (this.currentPath || {}).result);*/
 
     // set current path if this the found path is better that
     this.currentPath = paths[0] || new Path(this.position);

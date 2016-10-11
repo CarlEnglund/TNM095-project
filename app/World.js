@@ -81,6 +81,7 @@ class World {
     return {
       resources: this.resources.length,
       bots: this.bots.length,
+      livingBots: this.bots.filter(b => b.life > 0).length,
       nests: this.nests.length,
     };
   }
