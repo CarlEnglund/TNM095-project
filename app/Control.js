@@ -18,6 +18,13 @@ class Control {
     parent.appendChild(this.canvas);
 
     this.renderer = new Renderer(this.canvas);
+
+    this.canvas.addEventListener('click', (event) => {
+      if (Renderer.RESOURCE_ON_CLICK) {
+        this.world.addResourceOnClick([event.pageX, event.pageY]);
+      }
+    }, false);
+
   }
 
   start() {
@@ -35,5 +42,7 @@ class Control {
     window.requestAnimationFrame(this.render.bind(this));
   }
 }
+
+
 
 export default Control;

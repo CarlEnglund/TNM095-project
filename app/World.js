@@ -27,7 +27,10 @@ class World {
   update() {
     this.nests.forEach(nest => nest.update(this));
     this.bots.forEach(bot => bot.update(this));
-    // add random resources
+  }
+
+  addResourceOnClick(position) {
+    this.resources.push(new Resource(new Vec(position)));
   }
 
   createRandomResources(bounds, amount = 100) {

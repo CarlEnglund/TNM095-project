@@ -2,6 +2,7 @@ const dat = require('dat.gui/build/dat.gui.js');
 const Bot = require('./Bot.js');
 const Renderer = require('./Renderer.js');
 
+
 class Gui {
   constructor() {
     this.gui = this.setupDat();
@@ -19,6 +20,7 @@ class Gui {
       reach: Bot.REACH_LENGTH,
       consumption: Bot.CONSUMPTION,
       lines: Renderer.DRAW_LINES,
+      ResourceOnClick: Renderer.RESOURCE_ON_CLICK
     };
 
     const botFolder = gui.addFolder('Bot Parameters');
@@ -42,8 +44,11 @@ class Gui {
     rendererFolder.open();
 
     const guiLines = rendererFolder.add(params, 'lines').listen();
+    const guiResourceClick = rendererFolder.add(params, 'ResourceOnClick').listen();
+
 
     guiLines.onChange((value) => { Renderer.DRAW_LINES = value; });
+    guiResourceClick.onChange((value) => { Renderer.RESOURCE_ON_CLICK = value; });
 
     return gui;
   }

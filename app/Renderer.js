@@ -11,6 +11,7 @@ class Renderer {
     const ctx = this.canvas.getContext('2d');
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     world.drawables.forEach((drawable) => {
       // draw drawable
       const { style, size, position } = drawable;
@@ -37,5 +38,6 @@ class Renderer {
 }
 
 Renderer.DRAW_LINES = true;
+Renderer.RESOURCE_ON_CLICK = false;
 
 export default Renderer;
