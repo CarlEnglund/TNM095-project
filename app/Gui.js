@@ -23,6 +23,15 @@ class Gui {
       ResourceOnClick: Renderer.RESOURCE_ON_CLICK
     };
 
+    const controlFolder = gui.addFolder('Control');
+    controlFolder.open();
+
+    const guiLines = controlFolder.add(params, 'lines').listen();
+    const guiResourceClick = controlFolder.add(params, 'ResourceOnClick').listen();
+
+    guiLines.onChange((value) => { Renderer.DRAW_LINES = value; });
+    guiResourceClick.onChange((value) => { Renderer.RESOURCE_ON_CLICK = value; });
+
     const botFolder = gui.addFolder('Bot Parameters');
     botFolder.open();
 
@@ -39,16 +48,6 @@ class Gui {
     guiInventory.onChange((value) => { Bot.INVENTORY_LIMIT = value; });
     guiReach.onChange((value) => { Bot.REACH_LENGTH = value; });
     guiConsumption.onChange((value) => { Bot.CONSUMPTION = value; });
-
-    const rendererFolder = gui.addFolder('Renderer');
-    rendererFolder.open();
-
-    const guiLines = rendererFolder.add(params, 'lines').listen();
-    const guiResourceClick = rendererFolder.add(params, 'ResourceOnClick').listen();
-
-
-    guiLines.onChange((value) => { Renderer.DRAW_LINES = value; });
-    guiResourceClick.onChange((value) => { Renderer.RESOURCE_ON_CLICK = value; });
 
     return gui;
   }
