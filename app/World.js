@@ -29,8 +29,22 @@ class World {
     this.bots.forEach(bot => bot.update(this));
   }
 
+  /**
+   * create a resource at position
+   * @param position {Vec}
+   */
   addResourceOnClick(position) {
-    this.resources.push(new Resource(new Vec(position)));
+    this.resources.push(new Resource(position));
+  }
+
+  /**
+   * create a nest at position
+   * @param position {Vec}
+   */
+  addNestOnClick(position) {
+    const nest = new Nest(position);
+    this.createBots(nest);
+    this.nests.push(nest);
   }
 
   createRandomResources(bounds, amount = 100) {

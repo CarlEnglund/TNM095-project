@@ -1,7 +1,7 @@
 const dat = require('dat.gui/build/dat.gui.js');
 const Bot = require('./Bot.js');
 const Renderer = require('./Renderer.js');
-
+const Control = require('./Control.js');
 
 class Gui {
   constructor() {
@@ -20,17 +20,17 @@ class Gui {
       reach: Bot.REACH_LENGTH,
       consumption: Bot.CONSUMPTION,
       lines: Renderer.DRAW_LINES,
-      ResourceOnClick: Renderer.RESOURCE_ON_CLICK
+      clickAction: Control.default.ON_CLICK,
     };
 
     const controlFolder = gui.addFolder('Control');
     controlFolder.open();
 
     const guiLines = controlFolder.add(params, 'lines').listen();
-    const guiResourceClick = controlFolder.add(params, 'ResourceOnClick').listen();
+    const guiClick = controlFolder.add(params, 'clickAction', ['none', 'resource', 'nest']).listen();
 
     guiLines.onChange((value) => { Renderer.DRAW_LINES = value; });
-    guiResourceClick.onChange((value) => { Renderer.RESOURCE_ON_CLICK = value; });
+    guiClick.onChange((value) => { Control.default.ON_CLICK = value; });
 
     const botFolder = gui.addFolder('Bot Parameters');
     botFolder.open();

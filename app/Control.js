@@ -3,6 +3,7 @@
 const World = require('./World.js');
 const Renderer = require('./Renderer.js');
 const Gui = require('./Gui.js');
+const Vec = require('./Vec.js');
 
 require("../css/application.scss");
 
@@ -20,11 +21,16 @@ class Control {
     this.renderer = new Renderer(this.canvas);
 
     this.canvas.addEventListener('click', (event) => {
-      if (Renderer.RESOURCE_ON_CLICK) {
-        this.world.addResourceOnClick([event.pageX, event.pageY]);
+      const position = new Vec([event.pageX, event.pageY]);
+      switch (Control.ON_CLICK) {
+        case 'resource':
+          this.world.addResourceOnClick(position);
+          break;
+        case 'nest':
+          this.world.addNestOnClick(position);
+          break;
       }
     }, false);
-
   }
 
   start() {
@@ -43,6 +49,6 @@ class Control {
   }
 }
 
-
+Control.ON_CLICK = 'none';
 
 export default Control;
