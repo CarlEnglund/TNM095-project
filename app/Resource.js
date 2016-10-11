@@ -3,10 +3,9 @@ const Vec = require('./Vec.js');
 const FADE = 0.0001;
 
 class Resource {
-  constructor(position, lifetime = 1, level = 1) {
+  constructor(position, level = Resource.DEFAULT_LEVEL) {
     this.position = position;
     this.resourceLevel = level;
-    this.lifetime = lifetime;
   }
 
   static size() {
@@ -30,5 +29,7 @@ class Resource {
     to.addResource(this);
   }
 }
+
+Resource.DEFAULT_LEVEL = 3;
 
 export default Resource;

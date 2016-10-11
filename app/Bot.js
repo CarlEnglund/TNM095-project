@@ -30,14 +30,7 @@ class Bot {
     this.findPath(this.capacity);
     this.move();
     this.collectResources(world);
-    //TODO: We should know when the bot is in the nest in a better way..
-    if (this.costToDestination(this.nest.position) < 0.02 && this.inventory.length) {
-      this.inventory.forEach((r) => {
-        r.resourceLevel -= 1 / 10;
-        r.transfer(this, this.nest);
-        this.life += 1 / 10;
-      });
-    }
+    this.offloadToNest();
   }
 
   move() {
@@ -108,6 +101,20 @@ class Bot {
     if (resources.length === 0 && this.hasMemory && this.position.dist(this.bestMemory) < Bot.REACH_LENGTH) {
       this.removeRefFromMemory(this.memory[0]);
     }
+  }
+
+  offloadToNest() {
+    if (this.position.dist(this.nest.position) > Bot.REACH_LENGTH) {
+      return;
+    }
+
+    this.currentPath = new Path(this.position);
+
+    this.inventory.forEach((r) => {
+      r.resourceLevel -= 1 / 10;
+      r.transfer(this, this.nest);
+      this.life += 1 / 10;
+    });
   }
 
   /**

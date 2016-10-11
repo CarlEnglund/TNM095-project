@@ -23,10 +23,10 @@ class Renderer {
       ctx.fillRect(drawPosition.x, drawPosition.y, size.x, size.y);
 
       if (Renderer.DRAW_LINES && drawable.drawLines) {
-
         const lines = drawable.drawLines();
         if (lines.length > 0) {
           const firstPos = lines.splice(0, 1)[0];
+          ctx.fillStyle = "rgba(0,0,0,0.3)";
           ctx.beginPath();
           ctx.moveTo(firstPos.x, firstPos.y);
           lines.forEach(v => ctx.lineTo(v.x, v.y));
