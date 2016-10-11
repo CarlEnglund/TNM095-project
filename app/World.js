@@ -61,6 +61,12 @@ class World {
     }
   }
 
+  createNest() {
+    const bounds = { maxX: this.boundaries.w, maxY: this.boundaries.h };
+    let basePosition = new Vec.Random(bounds);
+    this.nests.push(new Nest(basePosition));
+  }
+
   get drawables() {
     return this.bots.concat(this.nests).concat(this.resources);
   }

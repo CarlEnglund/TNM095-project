@@ -7,6 +7,7 @@ class Nest {
     this.resources = [new Resource(new Vec(), 10)];
     this.timeout = [];
     this.creationAvailable = true;
+    this.nestCreationAvailable = true;
   }
 
   update(world) {
@@ -17,6 +18,10 @@ class Nest {
 
     if (this.canCreateBot) {
       this.startBotCreation(world);
+    }
+
+    if (this.canCreateNest) {
+      this.startNestCreation(world);
     }
   }
 
@@ -30,6 +35,12 @@ class Nest {
     return this.creationAvailable && resources > margin;
   }
 
+  get canCreateNest() {
+    const resources = this.availableResources;
+    const margin = 6 * Nest.NEST_COST;
+    return this.nestCreationAvailable && resources > margin;
+  }
+
   /**
    * start creating a bot
    * @param world {World}
@@ -37,6 +48,10 @@ class Nest {
   startBotCreation(world) {
     this.creationAvailable = false;
     setTimeout(this.createBot.bind(this, world), Nest.BOT_CREATION_TIME);
+  }
+  startNestCreation(world) {
+    this.nestCreationAvailable = false;
+    setTimeout(this.createNest.bind(this, world), Nest.NEST_CREATION_TIME);
   }
 
   createBot(world) {
@@ -46,11 +61,23 @@ class Nest {
       this.lastResource.resourceLevel += consumed;
       return;
     }
-
     world.createBots(this);
     this.creationAvailable = true;
   }
 
+  createNest(world) {
+    console.log('Creating Nest!!!');
+    const consumed = this.consumeResource(Nest.NEST_COST);
+    if (consumed !== Nest.NEST_COST) {
+      console.warn('Failed creating a bot, only consumed', consumed, 'resources. Expected', Nest.NEST_COST);
+      this.lastResource.resourceLevel += consumed;
+      return;
+    }
+
+    world.createNest(this);
+    this.nestCreationAvailable = true;
+
+  }
   get size() {
     const size = this.availableResources;
     return new Vec([size, size]);
@@ -103,8 +130,8 @@ class Nest {
   }
 
   refule(bot) {
-    const consumed = this.consumeResource(Nest.BOT_REFULE);
-    if (consumed !== Nest.BOT_REFULE) {
+    const consumed = this.consumeResource(Nest.BOT_REFUEL);
+    if (consumed !== Nest.BOT_REFUEL) {
       this.lastResource.resourceLevel += consumed;
       return;
     }
@@ -115,7 +142,10 @@ class Nest {
 
 Nest.COMSUMPTION = 0.005;
 Nest.BOT_COST = 6;
+Nest.NEST_COST = 10;
 Nest.BOT_CREATION_TIME = 5000;
-Nest.BOT_REFULE = 1;
+Nest.BOT_REFUEL = 1;
+Nest.NEST_CREATION_TIME = 10000;
+
 
 export default Nest;

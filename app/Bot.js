@@ -28,11 +28,19 @@ class Bot {
     }
     this.scan(world);
     this.findPath(this.capacity);
+    this.findClosestNest(world.nests);
     this.move();
     this.collectResources(world);
     this.offloadToNest();
   }
 
+  findClosestNest(nests) {
+    nests.forEach( nest => {
+      if (nest.position.dist(this.position) < this.nest.position.dist(this.position)) {
+        this.nest = nest;
+      }
+    });
+  }
   move() {
     let movement;
     if (!this.canCarryMore || this.costToDestination(this.nest.position) > this.resources) {

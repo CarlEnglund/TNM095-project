@@ -59,7 +59,7 @@ class Gui {
   }
 
   addInfo(object) {
-    const name = `${object.constructor.name} (#${Math.floor(Math.random() * 10000)})`;
+    const name = `${object.constructor.name} (#${Math.floor(Math.random() * 100000)})`;
     const folder = this.debugInfo.addFolder(name);
     this.infoObjects.push({ folder, object });
     const { info } = object;
