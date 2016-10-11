@@ -24,7 +24,6 @@ class Nest {
   }
 
   createBots(nest) {
-    console.log(nest)
     this.createBots(nest);
     nest.resources.pop();
     // Hacky way to clear timeouts, see http://stackoverflow.com/questions/3141064/how-to-stop-all-timeouts-and-intervals-using-javascript

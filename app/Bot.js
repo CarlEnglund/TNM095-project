@@ -50,7 +50,7 @@ class Bot {
       this.strategy = 'collect';
     }
     else {
-      this.angle -= Math.PI / 300;
+      this.angle -= Math.PI / 600;
       movement = this.goTowards(new Vec([this.nest.position.x + (Math.cos(this.angle) * 500), this.nest.position.y + (Math.sin(this.angle) * 500)]));
       this.strategy = 'search';
     }
@@ -232,6 +232,7 @@ class Bot {
    * get drawable line points for this
    */
   drawLines() {
+    if (this.life < 0) return [];
     const lines = [this.position];
     const pathLines = this.currentPath.points;
     return lines.concat(pathLines);
