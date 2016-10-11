@@ -10,6 +10,7 @@ class Bot {
     this.nest = nest;
     this.strategy = '';
     this.currentPath = new Path(this.position);
+    this.angleDirection = (Math.random() * 2 - 1);
     this.angle = 100 * Math.PI / 180;
   }
 
@@ -50,7 +51,7 @@ class Bot {
       this.strategy = 'collect';
     }
     else {
-      this.angle -= Math.PI / 600;
+      this.angleDirection > 0 ? (this.angle -= Math.PI / 600) : (this.angle += Math.PI / 600);
       movement = this.goTowards(new Vec([this.nest.position.x + (Math.cos(this.angle) * 500), this.nest.position.y + (Math.sin(this.angle) * 500)]));
       this.strategy = 'search';
     }
