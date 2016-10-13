@@ -2,12 +2,13 @@ const Vec = require('./Vec.js');
 const Resource = require('./Resource.js');
 
 class Nest {
-  constructor(position) {
+  constructor(position, color) {
     this.position = position;
     this.resources = [new Resource(new Vec(), 10)];
     this.timeout = [];
     this.creationAvailable = true;
     this.nestCreationAvailable = true;
+    this.color = color;
   }
 
   update(world) {
@@ -20,13 +21,13 @@ class Nest {
       this.startBotCreation(world);
     }
 
-    if (this.canCreateNest) {
+    /* if (this.canCreateNest) {
       this.startNestCreation(world);
-    }
+    } */
   }
 
   get style() {
-    return 'red';
+    return this.color;
   }
 
   get canCreateBot() {
@@ -62,7 +63,7 @@ class Nest {
       this.lastResource.resourceLevel += consumed;
       return;
     }
-    world.createBots(this);
+    world.createBots(this, this.color);
     this.creationAvailable = true;
   }
 

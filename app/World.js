@@ -18,15 +18,24 @@ class World {
   init() {
     console.info('Adding things to world...');
     const bounds = { maxX: this.boundaries.w, maxY: this.boundaries.h };
-    const basePosition = new Vec.Random(bounds);
+    const firstBasePosition = new Vec([(this.boundaries.w / 2) - 100, (this.boundaries.h / 2)]);
+    const secondBasePosition = new Vec([(this.boundaries.w / 2) + 100, (this.boundaries.h / 2)]);
     this.createRandomResources(bounds);
-    this.nests.push(new Nest(basePosition));
-    this.createBots(this.nests[0]);
+    this.nests.push(new Nest(firstBasePosition, 'green'));
+    this.nests.push(new Nest(secondBasePosition, 'red'));
+    this.createBots(this.nests[0], 'green');
+    this.createBots(this.nests[1], 'red');
   }
 
   update() {
     this.nests.forEach(nest => nest.update(this));
     this.bots.forEach(bot => bot.update(this));
+
+    if (this.resources.length === 0) {
+      console.log('Game over!')
+      console.log('Green Nest size is: ', this.nests[0].position.x, ' ', this.nests[0].position.y);
+      console.log('Red Nest size is: ', this.nests[1].position.x, ' ', this.nests[1].position.y);
+    }
   }
 
   /**
@@ -44,7 +53,7 @@ class World {
   addNestOnClick(position) {
     const nest = new Nest(position);
     this.createBots(nest);
-    this.nests.push(nest);
+    this.nests.push(nest, 'green');
   }
 
   createRandomResources(bounds, amount = 100) {
@@ -53,18 +62,18 @@ class World {
     }
   }
 
-  createBots(nest, amount = 1) {
+  createBots(nest, style,amount = 1) {
     while (amount--) {
       const botPos = nest.position.Copy();
       botPos.add(Vec.Random({minX: -3, minY: -3, maxX: 3, maxY: 3}));
-      this.bots.push(new Bot(botPos, nest));
+      this.bots.push(new Bot(botPos, nest, style));
     }
   }
 
   createNest() {
     const bounds = { maxX: this.boundaries.w, maxY: this.boundaries.h };
     let basePosition = new Vec.Random(bounds);
-    this.nests.push(new Nest(basePosition));
+    this.nests.push(new Nest(basePosition, 'green'));
   }
 
   get drawables() {

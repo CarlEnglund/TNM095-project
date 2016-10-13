@@ -2,7 +2,7 @@ const Vec = require('./Vec.js');
 const Path = require('./Path.js');
 
 class Bot {
-  constructor(position, nest) {
+  constructor(position, nest, color) {
     this.position = position;
     this.life = 1;
     this.memory = [];
@@ -12,6 +12,7 @@ class Bot {
     this.currentPath = new Path(this.position);
     this.angleDirection = (Math.random() * 2 - 1);
     this.angle = 100 * Math.PI / 180;
+    this.color = color;
   }
 
   static size() {
@@ -28,7 +29,7 @@ class Bot {
     }
     this.scan(world);
     this.findPath(this.capacity - 1);
-    this.findClosestNest(world.nests);
+    //this.findClosestNest(world.nests);
     this.move();
     this.collectResources(world);
     this.offloadToNest();
@@ -164,7 +165,7 @@ class Bot {
   }
 
   get style() {
-    return 'green';
+    return this.color;
   }
 
   get capacity() {
