@@ -69,7 +69,7 @@ class Nest {
     console.log('Creating Nest!!!');
     const consumed = this.consumeResource(Nest.NEST_COST);
     if (consumed !== Nest.NEST_COST) {
-      console.warn('Failed creating a bot, only consumed', consumed, 'resources. Expected', Nest.NEST_COST);
+      console.warn('Failed creating a Nest, only consumed', consumed, 'resources. Expected', Nest.NEST_COST);
       this.lastResource.resourceLevel += consumed;
       return;
     }
@@ -129,7 +129,7 @@ class Nest {
     return this.resources[this.resources.length - 1];
   }
 
-  refule(bot) {
+  refuel(bot) {
     const consumed = this.consumeResource(Nest.BOT_REFUEL);
     if (consumed !== Nest.BOT_REFUEL) {
       this.lastResource.resourceLevel += consumed;

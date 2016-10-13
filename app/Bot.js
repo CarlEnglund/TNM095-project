@@ -121,7 +121,7 @@ class Bot {
     this.inventory.forEach((r) => {
       r.transfer(this, this.nest);
     });
-    this.nest.refule(this);
+    this.nest.refuel(this);
     this.resetPath();
   }
 
