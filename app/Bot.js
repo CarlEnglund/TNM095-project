@@ -168,7 +168,11 @@ class Bot {
   }
 
   get capacity() {
-    return Bot.INVENTORY_LIMIT - this.inventory.length;
+    return this.inventoryLimit - this.inventory.length;
+  }
+
+  get inventoryLimit() {
+    return this.localInventoryLimit || Bot.INVENTORY_LIMIT;
   }
 
   set resources(resources) {

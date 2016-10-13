@@ -47,7 +47,7 @@ class Nest {
    */
   startBotCreation(world) {
     this.creationAvailable = false;
-    setTimeout(this.createBot.bind(this, world), Nest.BOT_CREATION_TIME);
+    setTimeout(this.createBot.bind(this, world), this.creationTime);
   }
 
   startNestCreation(world) {
@@ -106,7 +106,7 @@ class Nest {
   }
 
   /**
-   *
+   * consume resources from this nest's inventory
    * @param amount {number} how much to consume
    * @returns {number} what actually was consumed, 0 if `amount` isn't available
    */
@@ -131,13 +131,21 @@ class Nest {
   }
 
   refuel(bot) {
-    const consumed = this.consumeResource(Nest.BOT_REFUEL);
-    if (consumed !== Nest.BOT_REFUEL) {
+    const consumed = this.consumeResource(this.refuelAmount);
+    if (consumed !== this.refuelAmount) {
       this.lastResource.resourceLevel += consumed;
       return;
     }
 
     bot.life += consumed;
+  }
+
+  get refuelAmount() {
+    return this.botRefuelingAmont || Nest.BOT_REFUEL;
+  }
+
+  get creationTime() {
+    return this.botCreationTime || Nest.BOT_CREATION_TIME;
   }
 }
 
