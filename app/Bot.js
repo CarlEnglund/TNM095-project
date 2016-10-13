@@ -27,7 +27,7 @@ class Bot {
       return;
     }
     this.scan(world);
-    this.findPath(this.capacity);
+    this.findPath(this.capacity - 1);
     this.findClosestNest(world.nests);
     this.move();
     this.collectResources(world);
@@ -35,12 +35,13 @@ class Bot {
   }
 
   findClosestNest(nests) {
-    nests.forEach( nest => {
+    nests.forEach(nest => {
       if (nest.position.dist(this.position) < this.nest.position.dist(this.position)) {
         this.nest = nest;
       }
     });
   }
+
   move() {
     let movement;
     if (!this.canCarryMore || this.costToDestination(this.nest.position) > this.resources) {
@@ -118,9 +119,7 @@ class Bot {
       return;
     }
 
-    this.inventory.forEach((r) => {
-      r.transfer(this, this.nest);
-    });
+    this.inventory.forEach(r => r.transfer(this, this.nest));
     this.nest.refuel(this);
     this.resetPath();
   }
@@ -264,8 +263,8 @@ class Bot {
       inventory: this.inventory.length || 0,
       pathCost: this.currentPath.cost || 0,
       pathLenght: this.currentPath.points.length || 0,
-      pathResult: this.currentPath.result || 0,
-      angle: this.angle
+      pathResult: this.currentPath.result,
+      angle: this.angle,
     };
   }
 }

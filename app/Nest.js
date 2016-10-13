@@ -49,6 +49,7 @@ class Nest {
     this.creationAvailable = false;
     setTimeout(this.createBot.bind(this, world), Nest.BOT_CREATION_TIME);
   }
+
   startNestCreation(world) {
     this.nestCreationAvailable = false;
     setTimeout(this.createNest.bind(this, world), Nest.NEST_CREATION_TIME);

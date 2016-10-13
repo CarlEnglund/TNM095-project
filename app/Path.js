@@ -37,7 +37,7 @@ class Path {
    * @returns {number}
    */
   get result() {
-    return this.cost / this.points.length;
+    return (this.cost / this.points.length) || 0;
   }
 }
 
